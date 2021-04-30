@@ -374,7 +374,9 @@ static tool_path_planner::ToolPaths convertToPoses(const std::vector<RasterConst
 
       raster_path.push_back(raster_path_segment);
     }
-    rasters_array.push_back(raster_path);
+
+    if(!raster_path.empty())
+      rasters_array.push_back(raster_path);
   }
 
   return rasters_array;
