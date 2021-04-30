@@ -467,7 +467,8 @@ boost::optional<ToolPaths> PlaneSlicerRasterGenerator::generate()
   cog_filter->GetCenter(origin.data());
 
   // computing transformation matrix
-  Affine3d t = Translation3d(origin) * AngleAxisd(computeRotation(x_dir, y_dir, z_dir));
+//  Affine3d t = Translation3d(origin) *AngleAxisd(computeRotation(x_dir, y_dir, z_dir));
+  Affine3d t = Eigen::Isometry3d::Identity();
 
   // transforming data
   vtkSmartPointer<vtkTransform> vtk_transform = toVtkMatrix(t);
@@ -492,10 +493,10 @@ boost::optional<ToolPaths> PlaneSlicerRasterGenerator::generate()
   half_ext = sizes / 2.0;
   center = Eigen::Vector3d(bounds[0], bounds[2], bounds[3]) + half_ext;
 
-  // now cutting the mesh with planes along the y axis
+  // now cutting the mesh with planes along the x axis
   // @todo This should be calculated instead of being fixed along the y-axis
   Isometry3d rotation_offset = Isometry3d::Identity() * AngleAxisd(config_.raster_rot_offset, Vector3d::UnitZ());
-  Vector3d raster_dir = (rotation_offset * Vector3d::UnitY()).normalized();
+  Vector3d raster_dir = (rotation_offset * Vector3d::UnitX()).normalized();
 
   // Calculate all 8 corners projected onto the raster direction vector
   Eigen::VectorXd dist(8);
@@ -515,7 +516,9 @@ boost::optional<ToolPaths> PlaneSlicerRasterGenerator::generate()
   auto num_planes = static_cast<std::size_t>(std::ceil((max_coeff - min_coeff) / config_.raster_spacing));
 
   // Calculate the start location
-  Vector3d start_loc = center + (min_coeff * raster_dir);
+  //  Vector3d start_loc = center + (min_coeff * raster_dir);
+  Vector3d start_loc(Eigen::Vector3d::Zero());
+  start_loc.x() += config_.raster_spacing / 2.0;
 
   vtkSmartPointer<vtkAppendPolyData> raster_data = vtkSmartPointer<vtkAppendPolyData>::New();
   for (std::size_t i = 0; i < num_planes + 1; i++)
