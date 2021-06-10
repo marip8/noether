@@ -118,6 +118,14 @@ static std::string getClassName()
   return (status == 0) ? res.get() : mangled_name;
 }
 
+/**
+ * @brief Applies a moving average to a tool path segment to smooth its orientation
+ * @param input_poses
+ * @param n_pts - number of points to use in the moving average
+ * @return
+ */
+ToolPathSegment applyMovingAverageOrientationSmoother(const ToolPathSegment& input_poses, const int n_pts);
+
 }  // namespace tool_path_planner
 
 #endif /* INCLUDE_TOOL_PATH_PLANNER_UTILITIES_H_ */
