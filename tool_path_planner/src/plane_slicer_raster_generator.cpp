@@ -45,6 +45,7 @@
 
 #include <boost/make_shared.hpp>
 #include <Eigen/StdVector>
+#include <algorithm>
 #include <numeric>
 #include <eigen_conversions/eigen_msg.h>
 #include <pcl/surface/vtk_smoothing/vtk_utils.h>
@@ -511,8 +512,8 @@ boost::optional<ToolPaths> PlaneSlicerRasterGenerator::generate()
   dist(6) = raster_dir.dot(Eigen::Vector3d(-half_ext.x(), -half_ext.y(), -half_ext.z()));
   dist(7) = raster_dir.dot(Eigen::Vector3d(-half_ext.x(), half_ext.y(), -half_ext.z()));
 
-  double max_coeff = dist.maxCoeff();
-  double min_coeff = dist.minCoeff();
+  double max_coeff = center.x() + dist.maxCoeff();
+  double min_coeff = center.x() + dist.minCoeff();
 
   // Calculate the number of planes to cover the bounding box along the direction vector
   auto num_planes = static_cast<std::size_t>(std::ceil((max_coeff - min_coeff) / config_.raster_spacing));
@@ -520,6 +521,7 @@ boost::optional<ToolPaths> PlaneSlicerRasterGenerator::generate()
   // Calculate the start location
   //  Vector3d start_loc = center + (min_coeff * raster_dir);
   Vector3d start_loc(Eigen::Vector3d::Zero());
+  start_loc.x() = std::max(0.0, min_coeff);
   start_loc.x() += config_.raster_spacing / 2.0;
 
   vtkSmartPointer<vtkAppendPolyData> raster_data = vtkSmartPointer<vtkAppendPolyData>::New();
