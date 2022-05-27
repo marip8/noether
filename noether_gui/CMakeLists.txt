@@ -8,6 +8,7 @@ project(${pkg_extracted_name} VERSION ${pkg_extracted_version} LANGUAGES CXX)
 
 find_package(noether_tpp REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
+find_package(plugin_loader REQUIRED)
 
 option(NOETHER_ENABLE_CLANG_TIDY "Enables compilation with clang-tidy" OFF)
 option(NOETHER_ENABLE_TESTING "Enables compilation of unit tests" OFF)
@@ -25,6 +26,7 @@ include_directories(include ${CMAKE_CURRENT_BINARY_DIR})
 
 # Core Library
 add_library(${PROJECT_NAME} SHARED
+  src/plugin_interface.cpp
   # Widgets
   src/widgets/collapsible_area_widget.cpp
   src/widgets/tool_path_modifier_widgets.cpp
@@ -36,7 +38,7 @@ add_library(${PROJECT_NAME} SHARED
 target_include_directories(${PROJECT_NAME} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include>")
-target_link_libraries(${PROJECT_NAME} PUBLIC noether::noether_tpp Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} PUBLIC noether::noether_tpp Qt5::Widgets plugin_loader::plugin_loader)
 target_cxx_version(${PROJECT_NAME} PUBLIC VERSION 14)
 target_clang_tidy(${PROJECT_NAME}
   ENABLE ${NOETHER_ENABLE_CLANG_TIDY}
