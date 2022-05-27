@@ -8,6 +8,7 @@ project(${pkg_extracted_name} VERSION ${pkg_extracted_version} LANGUAGES CXX)
 
 find_package(Eigen3 REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common io)
+find_package(yaml-cpp REQUIRED)
 
 find_package(VTK REQUIRED NO_MODULE)
 if(VTK_FOUND AND ("${VTK_VERSION}" VERSION_LESS 7.1))
@@ -51,9 +52,20 @@ target_clang_tidy(${PROJECT_NAME}
   CHECKS ${DEFAULT_CLANG_TIDY_CHECKS})
 target_code_coverage(${PROJECT_NAME} INTERFACE ALL ENABLE ${NOETHER_ENABLE_TESTING})
 
+add_library(${PROJECT_NAME}_plugins SHARED
+  src/plugins.cpp
+)
+target_link_libraries(${PROJECT_NAME}_plugins PUBLIC ${PROJECT_NAME} yaml-cpp)
+target_cxx_version(${PROJECT_NAME}_plugins PUBLIC VERSION 14)
+target_clang_tidy(${PROJECT_NAME}_plugins
+  ENABLE ${NOETHER_ENABLE_CLANG_TIDY}
+  WARNINGS_AS_ERRORS ${NOETHER_ENABLE_TESTING}
+  CHECKS ${DEFAULT_CLANG_TIDY_CHECKS})
+target_code_coverage(${PROJECT_NAME}_plugins INTERFACE ALL ENABLE ${NOETHER_ENABLE_TESTING})
+
 # Install the library
 install(
-  TARGETS ${PROJECT_NAME}
+  TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_plugins
   EXPORT ${PROJECT_NAME}-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
