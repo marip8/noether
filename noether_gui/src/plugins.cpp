@@ -3,6 +3,7 @@
 #include <noether_gui/widgets/origin_generator_widgets.h>
 #include <noether_gui/widgets/tool_path_modifier_widgets.h>
 #include <noether_gui/widgets/raster_planner_widget.h>
+#include <noether_gui/widgets/plane_slicer_raster_planner_widget.h>
 
 #include <QWidget>
 
@@ -47,6 +48,18 @@ using UniformOrientationModifierWidgetPlugin =
 using MovingAverageOrientationSmoothingModifierWidgetPlugin =
     WidgetPluginImpl<MovingAverageOrientationSmoothingModifierWidget, ToolPathModifierWidget>;
 
+// Raster Tool Path Planners
+struct PlaneSlicerRasterPlannerWidgetPlugin : ToolPathPlannerWidgetPlugin
+{
+  QWidget* create(QWidget* parent = nullptr) const override final
+  {
+    plugin_loader::PluginLoader loader;
+    loader.search_paths.insert(PLUGIN_DIR);
+    loader.search_libraries.insert(PLUGINS);
+    return new PlaneSlicerRasterPlannerWidget(std::move(loader), parent);
+  }
+};
+
 }  // namespace noether
 
 EXPORT_DIRECTION_GENERATOR_WIDGET_PLUGIN(noether::FixedDirectionGeneratorWidgetPlugin, FixedDirectionGenerator)
@@ -67,3 +80,5 @@ EXPORT_TOOL_PATH_MODIFIER_WIDGET_PLUGIN(noether::DirectionOfTravelOrientationMod
 EXPORT_TOOL_PATH_MODIFIER_WIDGET_PLUGIN(noether::UniformOrientationModifierWidgetPlugin, UniformOrientationModifier)
 EXPORT_TOOL_PATH_MODIFIER_WIDGET_PLUGIN(noether::MovingAverageOrientationSmoothingModifierWidgetPlugin,
                                         MovingAverageOrientationSmoothingModifier)
+
+EXPORT_TPP_WIDGET_PLUGIN(noether::PlaneSlicerRasterPlannerWidgetPlugin, PlaneSlicerRasterPlanner);

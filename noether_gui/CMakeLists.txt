@@ -18,7 +18,8 @@ qt5_wrap_cpp(${PROJECT_NAME}_widget_mocs
   include/${PROJECT_NAME}/widgets/tool_path_modifier_widgets.h
   include/${PROJECT_NAME}/widgets/direction_generator_widgets.h
   include/${PROJECT_NAME}/widgets/origin_generator_widgets.h
-  include/${PROJECT_NAME}/widgets/tpp_pipeline_widget.h)
+  include/${PROJECT_NAME}/widgets/tpp_pipeline_widget.h
+  include/${PROJECT_NAME}/widgets/plane_slicer_raster_planner_widget.h)
 
 qt5_wrap_ui(${PROJECT_NAME}_widget_ui_mocs
   ui/vector3d_editor_widget.ui
@@ -37,6 +38,7 @@ add_library(${PROJECT_NAME} SHARED
   src/widgets/origin_generator_widgets.cpp
   src/widgets/raster_planner_widget.cpp
   src/widgets/tpp_pipeline_widget.cpp
+  src/widgets/plane_slicer_raster_planner_widget.cpp
   ${${PROJECT_NAME}_widget_mocs}
   ${${PROJECT_NAME}_widget_ui_mocs}
 )
@@ -56,7 +58,7 @@ add_library(${PROJECT_NAME}_plugins SHARED
   src/plugins.cpp)
 target_link_libraries(${PROJECT_NAME}_plugins PUBLIC ${PROJECT_NAME} Qt5::Widgets)
 target_compile_definitions(${PROJECT_NAME}_plugins PRIVATE PLUGIN_DIR="${CMAKE_INSTALL_PREFIX}/lib"
-                                                         PLUGINS="${PROJECT_NAME}_plugins")
+                                                           PLUGINS="${PROJECT_NAME}_plugins")
 target_cxx_version(${PROJECT_NAME}_plugins PUBLIC VERSION 14)
 target_clang_tidy(${PROJECT_NAME}_plugins
   ENABLE ${NOETHER_ENABLE_CLANG_TIDY}
