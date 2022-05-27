@@ -20,7 +20,8 @@ qt5_wrap_cpp(${PROJECT_NAME}_widget_mocs
   include/${PROJECT_NAME}/widgets/origin_generator_widgets.h)
 
 qt5_wrap_ui(${PROJECT_NAME}_widget_ui_mocs
-  ui/vector3d_editor_widget.ui)
+  ui/vector3d_editor_widget.ui
+  ui/raster_planner_widget.ui)
 
 include_directories(include ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -32,6 +33,7 @@ add_library(${PROJECT_NAME} SHARED
   src/widgets/tool_path_modifier_widgets.cpp
   src/widgets/direction_generator_widgets.cpp
   src/widgets/origin_generator_widgets.cpp
+  src/widgets/raster_planner_widget.cpp
   ${${PROJECT_NAME}_widget_mocs}
   ${${PROJECT_NAME}_widget_ui_mocs}
 )
