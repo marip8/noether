@@ -69,8 +69,14 @@ target_clang_tidy(${PROJECT_NAME}_plugins
   CHECKS ${DEFAULT_CLANG_TIDY_CHECKS})
 target_code_coverage(${PROJECT_NAME}_plugins INTERFACE ALL ENABLE ${NOETHER_ENABLE_TESTING})
 
+# TPP Application
+add_executable(${PROJECT_NAME}_app src/tpp_app.cpp)
+target_link_libraries(${PROJECT_NAME}_app PRIVATE ${PROJECT_NAME})
+target_compile_definitions(${PROJECT_NAME}_app PRIVATE PLUGIN_DIR="${CMAKE_INSTALL_PREFIX}/lib"
+                                                       PLUGINS="${PROJECT_NAME}_plugins")
+
 # Install headers
 install(DIRECTORY include/${PROJECT_NAME}/ DESTINATION include/${PROJECT_NAME})
 
 # Package configuration
-configure_package(NAMESPACE noether TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_plugins)
+configure_package(NAMESPACE noether TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_plugins ${PROJECT_NAME}_app)
