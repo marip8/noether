@@ -13,7 +13,8 @@ option(NOETHER_ENABLE_CLANG_TIDY "Enables compilation with clang-tidy" OFF)
 option(NOETHER_ENABLE_TESTING "Enables compilation of unit tests" OFF)
 
 qt5_wrap_cpp(${PROJECT_NAME}_widget_mocs
-  include/${PROJECT_NAME}/widgets/collapsible_area_widget.h)
+  include/${PROJECT_NAME}/widgets/collapsible_area_widget.h
+  include/${PROJECT_NAME}/widgets/tool_path_modifier_widgets.h)
 
 qt5_wrap_ui(${PROJECT_NAME}_widget_ui_mocs
   ui/vector3d_editor_widget.ui)
@@ -24,6 +25,7 @@ include_directories(include ${CMAKE_CURRENT_BINARY_DIR})
 add_library(${PROJECT_NAME} SHARED
   # Widgets
   src/widgets/collapsible_area_widget.cpp
+  src/widgets/tool_path_modifier_widgets.cpp
   ${${PROJECT_NAME}_widget_mocs}
   ${${PROJECT_NAME}_widget_ui_mocs}
 )
