@@ -51,14 +51,4 @@ private:
   double point_spacing;
 };
 
-/**
- * @brief Interface for creating instances of edge tool path planners.
- * @details This class contains the generic parameters for configuring edge tool path planners
- */
-struct EdgePlannerFactory : public ToolPathPlannerFactory
-{
-  /** @brief Distance between waypoints on the same raster line (m) */
-  double point_spacing;
-};
-
 }  // namespace noether

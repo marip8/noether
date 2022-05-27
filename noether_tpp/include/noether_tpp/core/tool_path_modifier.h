@@ -20,6 +20,11 @@
 
 #include <noether_tpp/core/types.h>
 
+namespace YAML
+{
+class Node;
+}
+
 namespace noether
 {
 /**
@@ -33,7 +38,7 @@ struct ToolPathModifier
   using Ptr = std::unique_ptr<ToolPathModifier>;
   using ConstPtr = std::unique_ptr<const ToolPathModifier>;
   virtual ~ToolPathModifier() = default;
-  virtual ToolPaths modify(ToolPaths toolpaths) const = 0;
+  virtual ToolPaths modify(ToolPaths tool_paths) const = 0;
 };
 
 /**
@@ -44,6 +49,17 @@ struct ToolPathModifier
 struct OneTimeToolPathModifier : public ToolPathModifier
 {
   virtual ToolPaths modify(ToolPaths tool_paths) const = 0;
+};
+
+class ToolPathModifierPlugin : public ToolPathModifier
+{
+public:
+  virtual void initialize(const YAML::Node& config) = 0;
+
+  ToolPaths modify(ToolPaths tool_paths) const override final { return modifier_->modify(tool_paths); }
+
+protected:
+  ToolPathModifier::ConstPtr modifier_;
 };
 
 }  // namespace noether

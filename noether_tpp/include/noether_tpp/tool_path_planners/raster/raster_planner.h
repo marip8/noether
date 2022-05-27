@@ -23,6 +23,11 @@
 #include <noether_tpp/core/tool_path_modifier.h>
 #include <noether_tpp/core/tool_path_planner.h>
 
+namespace YAML
+{
+class Node;
+}
+
 namespace noether
 {
 /**
@@ -36,7 +41,17 @@ struct DirectionGenerator
 
   virtual ~DirectionGenerator() = default;
   virtual Eigen::Vector3d generate(const pcl::PolygonMesh& mesh) const = 0;
-  virtual std::unique_ptr<DirectionGenerator> clone() const = 0;
+};
+
+class DirectionGeneratorPlugin : public DirectionGenerator
+{
+public:
+  virtual void initialize(const YAML::Node& config) = 0;
+
+  Eigen::Vector3d generate(const pcl::PolygonMesh& mesh) const override final { return generator_->generate(mesh); }
+
+protected:
+  DirectionGenerator::ConstPtr generator_;
 };
 
 /**
@@ -49,7 +64,17 @@ struct OriginGenerator
 
   virtual ~OriginGenerator() = default;
   virtual Eigen::Vector3d generate(const pcl::PolygonMesh& mesh) const = 0;
-  virtual std::unique_ptr<OriginGenerator> clone() const = 0;
+};
+
+class OriginGeneratorPlugin : public OriginGenerator
+{
+public:
+  virtual void initialize(const YAML::Node& config) = 0;
+
+  Eigen::Vector3d generate(const pcl::PolygonMesh& mesh) const override final { return generator_->generate(mesh); }
+
+protected:
+  OriginGenerator::ConstPtr generator_;
 };
 
 /**
@@ -89,30 +114,6 @@ protected:
   double min_hole_size_;
 
 private:
-};
-
-/**
- * @brief Interface for creating implementations of raster tool path planners.
- * @details This class contains the generic parameters for configuring raster tool path planners
- */
-struct RasterPlannerFactory : public ToolPathPlannerFactory
-{
-  /** @brief Direction generator to be copied to created planners */
-  std::unique_ptr<DirectionGenerator> dir_gen;
-  /** @brief Origin generator to be copied to created planners */
-  std::unique_ptr<OriginGenerator> origin_gen;
-
-  /** @brief Distance between waypoints on the same raster line (m) */
-  double point_spacing;
-  /** @brief Distance between raster lines */
-  double line_spacing;
-  /** @brief Minimum size of hole in a mesh for which the planner should split a raster line that
-   * crosses over the hole into multiple segments */
-  double min_hole_size;
-  /** @brief Function for creating a raster direction generator */
-  std::function<std::unique_ptr<const DirectionGenerator>()> direction_gen;
-  /** @brief Function for creating a raster origin generator */
-  std::function<std::unique_ptr<const OriginGenerator>()> origin_gen;
 };
 
 }  // namespace noether

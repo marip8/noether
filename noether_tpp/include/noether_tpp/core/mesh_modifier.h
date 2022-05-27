@@ -21,6 +21,11 @@
 #include <pcl/PolygonMesh.h>
 #include <vector>
 
+namespace YAML
+{
+class Node;
+}
+
 namespace noether
 {
 /**
@@ -35,6 +40,20 @@ struct MeshModifier
   using ConstPtr = std::unique_ptr<const MeshModifier>;
   virtual ~MeshModifier() = default;
   virtual std::vector<pcl::PolygonMesh> modify(const pcl::PolygonMesh& mesh) const = 0;
+};
+
+class MeshModifierPlugin : public MeshModifier
+{
+public:
+  virtual void initialize(const YAML::Node& config) = 0;
+
+  std::vector<pcl::PolygonMesh> modify(const pcl::PolygonMesh& mesh) const override final
+  {
+    return modifier_->modify(mesh);
+  }
+
+protected:
+  MeshModifier::ConstPtr modifier_;
 };
 
 }  // namespace noether

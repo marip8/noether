@@ -18,10 +18,15 @@
  */
 #pragma once
 
+#include <noether_tpp/core/types.h>
+
 #include <memory>
 #include <pcl/PolygonMesh.h>
 
-#include <noether_tpp/core/types.h>
+namespace YAML
+{
+class Node;
+}
 
 namespace noether
 {
@@ -36,13 +41,15 @@ struct ToolPathPlanner
   virtual ToolPaths plan(const pcl::PolygonMesh& mesh) const = 0;
 };
 
-/**
- * @brief Interface for creating implementations of the tool path planner interface
- */
-struct ToolPathPlannerFactory
+class ToolPathPlannerPlugin : public ToolPathPlanner
 {
-  virtual ~ToolPathPlannerFactory() = default;
-  virtual std::unique_ptr<const ToolPathPlanner> create() const = 0;
+public:
+  virtual void initialize(const YAML::Node& config) = 0;
+
+  ToolPaths plan(const pcl::PolygonMesh& mesh) const override final { return tpp_->plan(mesh); }
+
+protected:
+  ToolPathPlanner::Ptr tpp_;
 };
 
 }  // namespace noether
