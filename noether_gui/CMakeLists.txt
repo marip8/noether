@@ -12,10 +12,34 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 option(NOETHER_ENABLE_CLANG_TIDY "Enables compilation with clang-tidy" OFF)
 option(NOETHER_ENABLE_TESTING "Enables compilation of unit tests" OFF)
 
+qt5_wrap_cpp(${PROJECT_NAME}_widget_mocs
+  include/${PROJECT_NAME}/widgets/collapsible_area_widget.h)
+
+qt5_wrap_ui(${PROJECT_NAME}_widget_ui_mocs
+  ui/vector3d_editor_widget.ui)
+
 include_directories(include ${CMAKE_CURRENT_BINARY_DIR})
 
+# Core Library
+add_library(${PROJECT_NAME} SHARED
+  # Widgets
+  src/widgets/collapsible_area_widget.cpp
+  ${${PROJECT_NAME}_widget_mocs}
+  ${${PROJECT_NAME}_widget_ui_mocs}
+)
+target_include_directories(${PROJECT_NAME} PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>")
+target_link_libraries(${PROJECT_NAME} PUBLIC noether::noether_tpp Qt5::Widgets)
+target_cxx_version(${PROJECT_NAME} PUBLIC VERSION 14)
+target_clang_tidy(${PROJECT_NAME}
+  ENABLE ${NOETHER_ENABLE_CLANG_TIDY}
+  WARNINGS_AS_ERRORS ${NOETHER_ENABLE_TESTING}
+  CHECKS ${DEFAULT_CLANG_TIDY_CHECKS})
+target_code_coverage(${PROJECT_NAME} INTERFACE ALL ENABLE ${NOETHER_ENABLE_TESTING})
+
 # Install headers
-install(DIRECTORY include/ DESTINATION include/)
+install(DIRECTORY include/${PROJECT_NAME}/ DESTINATION include/${PROJECT_NAME})
 
 # Package configuration
-configure_package(NAMESPACE noether)
+configure_package(NAMESPACE noether TARGETS ${PROJECT_NAME})
