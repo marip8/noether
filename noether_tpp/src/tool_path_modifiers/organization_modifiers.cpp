@@ -46,7 +46,7 @@ static Eigen::Vector3d estimateRasterDirection(const ToolPaths& tool_paths,
   const Eigen::Vector3d norm_ref_tool_path_dir = reference_tool_path_dir.normalized();
 
   // Get the vector between the two points
-  Eigen::Vector3d raster_dir = first_wp_last_path.translation() - first_wp_last_path.translation();
+  Eigen::Vector3d raster_dir = first_wp_last_path.translation() - first_wp.translation();
 
   // Subtract the component of this vector that is parallel to the reference tool path direction
   raster_dir -= raster_dir.dot(norm_ref_tool_path_dir) * norm_ref_tool_path_dir;
