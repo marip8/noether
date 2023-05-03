@@ -12,7 +12,7 @@ namespace noether
 template <typename T, typename BaseT>
 struct WidgetPluginImpl : WidgetPlugin<BaseT>
 {
-  QWidget* create(QWidget* parent = nullptr) const override final { return new T(parent); }
+  QWidget* create(QWidget* parent = nullptr, const YAML::Node& = {}) const override final { return new T(parent); }
 };
 
 // Direction Generators
@@ -51,7 +51,7 @@ using MovingAverageOrientationSmoothingModifierWidgetPlugin =
 // Raster Tool Path Planners
 struct PlaneSlicerRasterPlannerWidgetPlugin : ToolPathPlannerWidgetPlugin
 {
-  QWidget* create(QWidget* parent = nullptr) const override final
+  QWidget* create(QWidget* parent = nullptr, const YAML::Node& = {}) const override final
   {
     boost_plugin_loader::PluginLoader loader;
     loader.search_libraries.insert(NOETHER_GUI_PLUGINS);
