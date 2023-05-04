@@ -17,18 +17,9 @@ struct WidgetPluginImpl : WidgetPlugin<BaseT>
   {
     auto widget = new T(parent);
 
+    // Attempt to configure the widget
     if (!config.IsNull())
-    {
-      // Attempt to configure the widget
-      try
-      {
-        widget->configure(config);
-      }
-      catch (const std::exception& ex)
-      {
-        QMessageBox::warning(widget, "Configuration error", ex.what());
-      }
-    }
+      widget->configure(config);
 
     return widget;
   }
@@ -77,18 +68,9 @@ struct PlaneSlicerRasterPlannerWidgetPlugin : ToolPathPlannerWidgetPlugin
     loader.search_libraries.insert(NOETHER_GUI_PLUGINS);
     auto widget = new PlaneSlicerRasterPlannerWidget(std::move(loader), parent);
 
+    // Attempt to configure the widget
     if (!config.IsNull())
-    {
-      // Attempt to configure the widget
-      try
-      {
-        widget->configure(config);
-      }
-      catch (const std::exception& ex)
-      {
-        QMessageBox::warning(widget, "Configuration error", ex.what());
-      }
-    }
+      widget->configure(config);
 
     return widget;
   }
