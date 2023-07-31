@@ -1,4 +1,4 @@
-#include <noether_gui/widgets/tpp_widget.h>
+﻿#include <noether_gui/widgets/tpp_widget.h>
 #include "ui_tpp_widget.h"
 #include <noether_gui/widgets/tpp_pipeline_widget.h>
 #include <noether_gui/utils.h>
@@ -207,8 +207,27 @@ void TPPWidget::onPlan(const bool /*checked*/)
 
     const ToolPathPlannerPipeline pipeline = pipeline_widget_->createPipeline();
     QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    // TODO: change to new function that also returns mesh fragments
     tool_paths_ = pipeline.plan(mesh);
+
+    std::vector<pcl::PolygonMesh> meshes = pipeline.mesh_modifier->modify(mesh);
+
+    tool_paths_.clear();
+    tool_paths_.reserve(meshes.size());
+
+    for (const pcl::PolygonMesh& mesh : meshes)
+    {
+      ToolPaths path = pipeline.planner->plan(mesh);
+      tool_paths_.push_back(pipeline.tool_path_modifier->modify(path));
+    }
+
     QApplication::restoreOverrideCursor();
+
+    // TODO: render the mesh fragments
+    //   First combine mesh fragments into single mesh (pcl::concatenate?)
+    //   Convert mesh to VTK poly data
+    //   Set mesh_mapper input to this new polydata
 
     // Render the tool paths
     std::for_each(tool_path_actors_.begin(), tool_path_actors_.end(), [this](vtkProp* actor) {
