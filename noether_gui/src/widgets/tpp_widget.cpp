@@ -27,7 +27,6 @@
 #include <vtkTransform.h>
 #include <vtkTubeFilter.h>
 #include <pcl/surface/vtk_smoothing/vtk_utils.h>
-#include <iostream>
 
 namespace noether
 {
@@ -68,6 +67,7 @@ TPPWidget::TPPWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
   connect(ui_->push_button_save_configuration, &QPushButton::clicked, this, &TPPWidget::onSaveConfiguration);
 //  connect(ui_->push_button_show_original_mesh, &QPushButton::clicked, this, &TPPWidget::onShowOriginalMesh);
   connect(ui_->check_box_show_original_mesh, &QCheckBox::clicked, this, &TPPWidget::onShowOriginalMesh);
+  connect(ui_->check_box_show_modified_tool_path, &QCheckBox::clicked, this, &TPPWidget::onShowModifiedToolPath);
   connect(ui_->push_button_plan, &QPushButton::clicked, this, &TPPWidget::onPlan);
   connect(ui_->double_spin_box_axis_size, &QDoubleSpinBox::editingFinished, this, [this]() {
     axes_->SetScaleFactor(ui_->double_spin_box_axis_size->value());
@@ -81,8 +81,18 @@ TPPWidget::TPPWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
 void TPPWidget::onShowOriginalMesh()
 {
   bool showMesh = ui_->check_box_show_original_mesh->isChecked();
-    mesh_actor_->SetVisibility(showMesh);
-    render_widget_->GetRenderWindow()->Render();
+  mesh_actor_->SetVisibility(showMesh);
+  render_widget_->GetRenderWindow()->Render();
+}
+
+void TPPWidget::onShowModifiedToolPath()
+{
+  bool showMesh = ui_->check_box_show_modified_tool_path->isChecked();
+  for (auto actor : tool_path_actors_)
+  {
+    actor->SetVisibility(showMesh);
+  }
+  render_widget_->GetRenderWindow()->Render();
 }
 
 TPPWidget::~TPPWidget()

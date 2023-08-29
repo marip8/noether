@@ -58,6 +58,7 @@ private:
   void onSaveConfiguration(const bool /*checked*/);
   void onPlan(const bool /*checked*/);
   void onShowOriginalMesh();
+  void onShowModifiedToolPath();
 
 
   Ui::TPP* ui_;
