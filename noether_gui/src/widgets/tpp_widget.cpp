@@ -26,6 +26,8 @@
 #include <vtkTransformFilter.h>
 #include <vtkTransform.h>
 #include <vtkTubeFilter.h>
+#include <pcl/surface/vtk_smoothing/vtk_utils.h>
+#include <iostream>
 
 namespace noether
 {
@@ -64,6 +66,7 @@ TPPWidget::TPPWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
   connect(ui_->push_button_load_mesh, &QPushButton::clicked, this, &TPPWidget::onLoadMesh);
   connect(ui_->push_button_load_configuration, &QPushButton::clicked, this, &TPPWidget::onLoadConfiguration);
   connect(ui_->push_button_save_configuration, &QPushButton::clicked, this, &TPPWidget::onSaveConfiguration);
+  connect(ui_->push_button_show_original_mesh, &QPushButton::clicked, this, &TPPWidget::onShowOriginalMesh);
   connect(ui_->push_button_plan, &QPushButton::clicked, this, &TPPWidget::onPlan);
   connect(ui_->double_spin_box_axis_size, &QDoubleSpinBox::editingFinished, this, [this]() {
     axes_->SetScaleFactor(ui_->double_spin_box_axis_size->value());
@@ -71,6 +74,25 @@ TPPWidget::TPPWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
     render_widget_->GetRenderWindow()->Render();
     render_widget_->GetRenderWindow()->Render();
   });
+
+}
+
+//void TPPWidget::onShowOriginalMesh(const int state)
+//{
+//  mesh_actor_->SetVisibility(state == Qt::Checked);
+//  render_widget_->GetRenderWindow()->Render();
+////  render_widget_->GetRenderWindow()->Render();
+//}
+
+void TPPWidget::onShowOriginalMesh(const bool /*checked*/)
+{
+//    if (mesh_actor_) {
+        mesh_actor_->SetVisibility(false);
+//        cout << "Mesh visibility set to:" << showMesh;
+        // Call any necessary update/rendering functions here if needed.
+//    } else {
+//        cout << "Mesh actor is not valid!" << "\n";
+//    }
 }
 
 TPPWidget::~TPPWidget()
@@ -221,13 +243,25 @@ void TPPWidget::onPlan(const bool /*checked*/)
       ToolPaths path = pipeline.planner->plan(mesh);
       tool_paths_.push_back(pipeline.tool_path_modifier->modify(path));
     }
+    mesh_actor_->SetVisibility(ui_->check_box_show_original_mesh->isChecked());
+//    render_widget_->GetRenderWindow()->Render();
+//    render_widget_->GetRenderWindow()->Render();
 
     QApplication::restoreOverrideCursor();
 
+
     // TODO: render the mesh fragments
     //   First combine mesh fragments into single mesh (pcl::concatenate?)
+    pcl::PolygonMesh output_mesh;
+    for (size_t i=0; i < meshes.size()-1; i++)
+    {
+      pcl::PolygonMesh::concatenate(meshes[i],meshes[i+1], output_mesh);
+    }
     //   Convert mesh to VTK poly data
+    vtkSmartPointer<vtkPolyData> poly_data_mesh;
+    pcl::VTKUtils::mesh2vtk(output_mesh, poly_data_mesh);
     //   Set mesh_mapper input to this new polydata
+//    setMeshFile(output_mesh);
 
     // Render the tool paths
     std::for_each(tool_path_actors_.begin(), tool_path_actors_.end(), [this](vtkProp* actor) {

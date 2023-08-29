@@ -2,6 +2,7 @@
 
 #include <noether_tpp/core/types.h>
 #include <QWidget>
+#include <QCheckBox>
 
 class QVTKWidget;
 class vtkActor;
@@ -47,11 +48,17 @@ public:
   void setMeshFile(const QString& file);
   void setConfigurationFile(const QString& file);
 
+//private slots:
+//  void onShowOriginalMesh(const bool /*checked*/);
+
+
 private:
   void onLoadMesh(const bool /*checked*/);
   void onLoadConfiguration(const bool /*checked*/);
   void onSaveConfiguration(const bool /*checked*/);
   void onPlan(const bool /*checked*/);
+  void onShowOriginalMesh(const bool /*checked*/);
+
 
   Ui::TPP* ui_;
   TPPPipelineWidget* pipeline_widget_;
@@ -66,6 +73,8 @@ private:
   vtkTubeFilter* tube_filter_;
 
   std::vector<ToolPaths> tool_paths_;
+//  QPushButton *push_button_show_original_mesh;
+
 };
 
 }  // namespace noether
