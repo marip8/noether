@@ -66,7 +66,8 @@ TPPWidget::TPPWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
   connect(ui_->push_button_load_mesh, &QPushButton::clicked, this, &TPPWidget::onLoadMesh);
   connect(ui_->push_button_load_configuration, &QPushButton::clicked, this, &TPPWidget::onLoadConfiguration);
   connect(ui_->push_button_save_configuration, &QPushButton::clicked, this, &TPPWidget::onSaveConfiguration);
-  connect(ui_->push_button_show_original_mesh, &QPushButton::clicked, this, &TPPWidget::onShowOriginalMesh);
+//  connect(ui_->push_button_show_original_mesh, &QPushButton::clicked, this, &TPPWidget::onShowOriginalMesh);
+  connect(ui_->check_box_show_original_mesh, &QCheckBox::clicked, this, &TPPWidget::onShowOriginalMesh);
   connect(ui_->push_button_plan, &QPushButton::clicked, this, &TPPWidget::onPlan);
   connect(ui_->double_spin_box_axis_size, &QDoubleSpinBox::editingFinished, this, [this]() {
     axes_->SetScaleFactor(ui_->double_spin_box_axis_size->value());
@@ -77,22 +78,11 @@ TPPWidget::TPPWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
 
 }
 
-//void TPPWidget::onShowOriginalMesh(const int state)
-//{
-//  mesh_actor_->SetVisibility(state == Qt::Checked);
-//  render_widget_->GetRenderWindow()->Render();
-////  render_widget_->GetRenderWindow()->Render();
-//}
-
-void TPPWidget::onShowOriginalMesh(const bool /*checked*/)
+void TPPWidget::onShowOriginalMesh()
 {
-//    if (mesh_actor_) {
-        mesh_actor_->SetVisibility(false);
-//        cout << "Mesh visibility set to:" << showMesh;
-        // Call any necessary update/rendering functions here if needed.
-//    } else {
-//        cout << "Mesh actor is not valid!" << "\n";
-//    }
+  bool showMesh = ui_->check_box_show_original_mesh->isChecked();
+    mesh_actor_->SetVisibility(showMesh);
+    render_widget_->GetRenderWindow()->Render();
 }
 
 TPPWidget::~TPPWidget()

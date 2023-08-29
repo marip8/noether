@@ -57,7 +57,7 @@ private:
   void onLoadConfiguration(const bool /*checked*/);
   void onSaveConfiguration(const bool /*checked*/);
   void onPlan(const bool /*checked*/);
-  void onShowOriginalMesh(const bool /*checked*/);
+  void onShowOriginalMesh();
 
 
   Ui::TPP* ui_;
