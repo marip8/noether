@@ -59,6 +59,7 @@ private:
   void onPlan(const bool /*checked*/);
   void onShowOriginalMesh();
   void onShowModifiedToolPath();
+  void onShowModifiedMesh();
 
 
   Ui::TPP* ui_;
@@ -69,6 +70,8 @@ private:
   vtkRenderer* renderer_;
   vtkPolyDataMapper* mesh_mapper_;
   vtkActor* mesh_actor_;
+  vtkPolyDataMapper* mesh_fragment_mapper_;
+  vtkActor* mesh_fragment_actor_;
   std::vector<vtkProp*> tool_path_actors_;
   vtkAxes* axes_;
   vtkTubeFilter* tube_filter_;

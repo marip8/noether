@@ -38,6 +38,8 @@ TPPWidget::TPPWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
   , renderer_(vtkOpenGLRenderer::New())
   , mesh_mapper_(vtkOpenGLPolyDataMapper::New())
   , mesh_actor_(vtkOpenGLActor::New())
+  , mesh_fragment_mapper_(vtkOpenGLPolyDataMapper::New())
+  , mesh_fragment_actor_(vtkOpenGLActor::New())
   , axes_(vtkAxes::New())
   , tube_filter_(vtkTubeFilter::New())
 {
@@ -49,6 +51,8 @@ TPPWidget::TPPWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
   // Set up the VTK objects
   mesh_actor_->SetMapper(mesh_mapper_);
   renderer_->AddActor(mesh_actor_);
+  mesh_fragment_actor_->SetMapper(mesh_fragment_mapper_);
+  renderer_->AddActor(mesh_fragment_actor_);
   renderer_->SetBackground(0.2, 0.2, 0.2);
   axes_->SetScaleFactor(ui_->double_spin_box_axis_size->value());
   tube_filter_->SetInputConnection(axes_->GetOutputPort());
@@ -65,9 +69,10 @@ TPPWidget::TPPWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
   connect(ui_->push_button_load_mesh, &QPushButton::clicked, this, &TPPWidget::onLoadMesh);
   connect(ui_->push_button_load_configuration, &QPushButton::clicked, this, &TPPWidget::onLoadConfiguration);
   connect(ui_->push_button_save_configuration, &QPushButton::clicked, this, &TPPWidget::onSaveConfiguration);
-//  connect(ui_->push_button_show_original_mesh, &QPushButton::clicked, this, &TPPWidget::onShowOriginalMesh);
+//  connect(ui_->push_button_show_original_toolpath, &QPushButton::clicked, this, &TPPWidget::onShowOriginalMesh);
   connect(ui_->check_box_show_original_mesh, &QCheckBox::clicked, this, &TPPWidget::onShowOriginalMesh);
   connect(ui_->check_box_show_modified_tool_path, &QCheckBox::clicked, this, &TPPWidget::onShowModifiedToolPath);
+  connect(ui_->check_box_show_modified_mesh, &QCheckBox::clicked, this, &TPPWidget::onShowModifiedMesh);
   connect(ui_->push_button_plan, &QPushButton::clicked, this, &TPPWidget::onPlan);
   connect(ui_->double_spin_box_axis_size, &QDoubleSpinBox::editingFinished, this, [this]() {
     axes_->SetScaleFactor(ui_->double_spin_box_axis_size->value());
@@ -83,15 +88,25 @@ void TPPWidget::onShowOriginalMesh()
   bool showMesh = ui_->check_box_show_original_mesh->isChecked();
   mesh_actor_->SetVisibility(showMesh);
   render_widget_->GetRenderWindow()->Render();
+  render_widget_->GetRenderWindow()->Render();
 }
 
 void TPPWidget::onShowModifiedToolPath()
 {
-  bool showMesh = ui_->check_box_show_modified_tool_path->isChecked();
+  bool show = ui_->check_box_show_modified_tool_path->isChecked();
   for (auto actor : tool_path_actors_)
   {
-    actor->SetVisibility(showMesh);
+    actor->SetVisibility(show);
   }
+  render_widget_->GetRenderWindow()->Render();
+  render_widget_->GetRenderWindow()->Render();
+}
+
+void TPPWidget::onShowModifiedMesh()
+{
+  bool showMesh = ui_->check_box_show_modified_mesh->isChecked();
+  mesh_fragment_actor_->SetVisibility(showMesh);
+  render_widget_->GetRenderWindow()->Render();
   render_widget_->GetRenderWindow()->Render();
 }
 
@@ -231,7 +246,7 @@ void TPPWidget::onPlan(const bool /*checked*/)
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
     // TODO: change to new function that also returns mesh fragments
-    tool_paths_ = pipeline.plan(mesh);
+//    tool_paths_ = pipeline.plan(mesh);
 
     std::vector<pcl::PolygonMesh> meshes = pipeline.mesh_modifier->modify(mesh);
 
@@ -243,7 +258,7 @@ void TPPWidget::onPlan(const bool /*checked*/)
       ToolPaths path = pipeline.planner->plan(mesh);
       tool_paths_.push_back(pipeline.tool_path_modifier->modify(path));
     }
-    mesh_actor_->SetVisibility(ui_->check_box_show_original_mesh->isChecked());
+//    mesh_actor_->SetVisibility(ui_->check_box_show_original_mesh->isChecked()); //DOUBLE CHECK IF YOU NEED TO CHANGE THIS
 //    render_widget_->GetRenderWindow()->Render();
 //    render_widget_->GetRenderWindow()->Render();
 
@@ -253,15 +268,14 @@ void TPPWidget::onPlan(const bool /*checked*/)
     // TODO: render the mesh fragments
     //   First combine mesh fragments into single mesh (pcl::concatenate?)
     pcl::PolygonMesh output_mesh;
-    for (size_t i=0; i < meshes.size()-1; i++)
+    for (const pcl::PolygonMesh& mesh : meshes)
     {
-      pcl::PolygonMesh::concatenate(meshes[i],meshes[i+1], output_mesh);
+      pcl::PolygonMesh::concatenate(output_mesh,mesh, output_mesh);
     }
     //   Convert mesh to VTK poly data
     vtkSmartPointer<vtkPolyData> poly_data_mesh;
     pcl::VTKUtils::mesh2vtk(output_mesh, poly_data_mesh);
-    //   Set mesh_mapper input to this new polydata
-//    setMeshFile(output_mesh);
+    mesh_fragment_mapper_->SetInputData(poly_data_mesh);
 
     // Render the tool paths
     std::for_each(tool_path_actors_.begin(), tool_path_actors_.end(), [this](vtkProp* actor) {
