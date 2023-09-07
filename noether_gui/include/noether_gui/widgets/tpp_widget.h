@@ -3,6 +3,7 @@
 #include <noether_tpp/core/types.h>
 #include <QWidget>
 #include <QCheckBox>
+#include <vtkSmartPointer.h>
 
 class QVTKWidget;
 class vtkActor;
@@ -11,6 +12,8 @@ class vtkProp;
 class vtkRenderer;
 class vtkAxes;
 class vtkTubeFilter;
+class vtkAssembly;
+class vtkPolyData;
 
 namespace boost_plugin_loader
 {
@@ -57,10 +60,10 @@ private:
   void onLoadConfiguration(const bool /*checked*/);
   void onSaveConfiguration(const bool /*checked*/);
   void onPlan(const bool /*checked*/);
-  void onShowOriginalMesh();
-  void onShowModifiedToolPath();
-  void onShowModifiedMesh();
-
+  void onShowOriginalMesh(const bool);
+  void onShowModifiedMesh(const bool);
+  void onShowUnmodifiedToolPath(const bool);
+  void onShowModifiedToolPath(const bool);
 
   Ui::TPP* ui_;
   TPPPipelineWidget* pipeline_widget_;
@@ -70,9 +73,13 @@ private:
   vtkRenderer* renderer_;
   vtkPolyDataMapper* mesh_mapper_;
   vtkActor* mesh_actor_;
+
   vtkPolyDataMapper* mesh_fragment_mapper_;
   vtkActor* mesh_fragment_actor_;
-  std::vector<vtkProp*> tool_path_actors_;
+  vtkSmartPointer<vtkPolyData> combined_mesh_fragments_;
+
+  vtkAssembly* tool_path_actor_;
+  vtkAssembly* unmodified_tool_path_actor_;
   vtkAxes* axes_;
   vtkTubeFilter* tube_filter_;
 
