@@ -10,6 +10,7 @@ namespace noether
 {
 class CircularLeadInToolPathModifierWidget : public ToolPathModifierWidget
 {
+  Q_OBJECT
 public:
   CircularLeadInToolPathModifierWidget(QWidget* parent = nullptr);
 

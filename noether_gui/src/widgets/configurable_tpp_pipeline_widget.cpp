@@ -15,7 +15,7 @@ namespace noether
 ConfigurableTPPPipelineWidget::ConfigurableTPPPipelineWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent)
   : QWidget(parent)
   , ui_(new Ui::ConfigurableTPPPipeline())
-  , pipeline_widget_(new TPPPipelineWidget(std::move(loader), this))
+  , pipeline_widget_(new TPPPipelineWidget(std::move(loader)))
 {
   ui_->setupUi(this);
   layout()->addWidget(pipeline_widget_);

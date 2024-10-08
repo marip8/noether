@@ -24,48 +24,83 @@ set(CMAKE_AUTOUIC ON)
 # Core Library
 add_library(${PROJECT_NAME} SHARED
   src/plugin_interface.cpp
+  include/noether_gui/widgets.h
   # Widgets
+  include/noether_gui/widgets/plugin_loader_widget.h
   src/widgets/plugin_loader_widget.cpp
+  include/noether_gui/widgets/tpp_pipeline_widget.h
   src/widgets/tpp_pipeline_widget.cpp
+  include/noether_gui/widgets/configurable_tpp_pipeline_widget.h
   src/widgets/configurable_tpp_pipeline_widget.cpp
+  include/noether_gui/widgets/tpp_widget.h
   src/widgets/tpp_widget.cpp
   # Tool Path Planners
   #   Raster Planner
+  include/noether_gui/widgets/tool_path_planners/raster/raster_planner_widget.h
   src/widgets/tool_path_planners/raster/raster_planner_widget.cpp
   #   Direction Generator
+  include/noether_gui/widgets/tool_path_planners/raster/direction_generators/fixed_direction_generator_widget.h
   src/widgets/tool_path_planners/raster/direction_generators/fixed_direction_generator_widget.cpp
+  include/noether_gui/widgets/tool_path_planners/raster/direction_generators/principal_axis_direction_generator_widget.h
   src/widgets/tool_path_planners/raster/direction_generators/principal_axis_direction_generator_widget.cpp
   #   Origin Generator
+  include/noether_gui/widgets/tool_path_planners/raster/origin_generators/fixed_origin_generator_widget.h
   src/widgets/tool_path_planners/raster/origin_generators/fixed_origin_generator_widget.cpp
+  include/noether_gui/widgets/tool_path_planners/raster/origin_generators/aabb_origin_generator_widget.h
   src/widgets/tool_path_planners/raster/origin_generators/aabb_origin_generator_widget.cpp
+  include/noether_gui/widgets/tool_path_planners/raster/origin_generators/centroid_origin_generator_widget.h
   src/widgets/tool_path_planners/raster/origin_generators/centroid_origin_generator_widget.cpp
   #   Plane Slicer Tool Path Planner
+  include/noether_gui/widgets/tool_path_planners/raster/plane_slicer_raster_planner_widget.h
   src/widgets/tool_path_planners/raster/plane_slicer_raster_planner_widget.cpp
+  include/noether_gui/widgets/tool_path_planners/raster/cross_hatch_plane_slicer_raster_planner_widget.h
   src/widgets/tool_path_planners/raster/cross_hatch_plane_slicer_raster_planner.cpp
-  #   Half Edge Planner
+  #   Boundary Edge Planner
+  include/noether_gui/widgets/tool_path_planners/edge/boundary_edge_planner_widget.h
   src/widgets/tool_path_planners/edge/boundary_edge_planner_widget.cpp
   # Tool Path Modifiers
+  include/noether_gui/widgets/tool_path_modifiers/circular_lead_in_modifier_widget.h
   src/widgets/tool_path_modifiers/circular_lead_in_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/circular_lead_out_modifier_widget.h
   src/widgets/tool_path_modifiers/circular_lead_out_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/concatenate_modifier_widget.h
   src/widgets/tool_path_modifiers/concatenate_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/direction_of_travel_orientation_modifier_widget.h
   src/widgets/tool_path_modifiers/direction_of_travel_orientation_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/fixed_orientation_modifier_widget.h
   src/widgets/tool_path_modifiers/fixed_orientation_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/moving_average_orientation_smoothing_modifier_widget.h
   src/widgets/tool_path_modifiers/moving_average_orientation_smoothing_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/raster_organization_modifier_widget.h
   src/widgets/tool_path_modifiers/raster_organization_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/snake_organization_modifier_widget.h
   src/widgets/tool_path_modifiers/snake_organization_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/standard_edge_paths_organization_modifier_widget.h
   src/widgets/tool_path_modifiers/standard_edge_paths_organization_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/linear_approach_modifier_widget.h
   src/widgets/tool_path_modifiers/linear_approach_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/linear_departure_modifier_widget.h
   src/widgets/tool_path_modifiers/linear_departure_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/tool_drag_orientation_modifier_widget.h
   src/widgets/tool_path_modifiers/tool_drag_orientation_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/uniform_orientation_modifier_widget.h
   src/widgets/tool_path_modifiers/uniform_orientation_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/offset_modifier_widget.h
   src/widgets/tool_path_modifiers/offset_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/uniform_spacing_spline_modifier_widget.h
   src/widgets/tool_path_modifiers/uniform_spacing_spline_modifier_widget.cpp
+  include/noether_gui/widgets/tool_path_modifiers/uniform_spacing_linear_modifier_widget.h
   src/widgets/tool_path_modifiers/uniform_spacing_linear_modifier_widget.cpp
   # Mesh Modifiers
+  include/noether_gui/widgets/mesh_modifiers/plane_projection_modifier_widget.h
   src/widgets/mesh_modifiers/plane_projection_modifier_widget.cpp
+  include/noether_gui/widgets/mesh_modifiers/euclidean_clustering_modifier_widget.h
   src/widgets/mesh_modifiers/euclidean_clustering_modifier_widget.cpp
+  include/noether_gui/widgets/mesh_modifiers/normal_estimation_pcl_widget.h
   src/widgets/mesh_modifiers/normal_estimation_pcl_widget.cpp
+  include/noether_gui/widgets/mesh_modifiers/normals_from_mesh_faces_modifier_widget.h
   src/widgets/mesh_modifiers/normals_from_mesh_faces_modifier_widget.cpp
+  include/noether_gui/widgets/mesh_modifiers/fill_holes_modifier_widget.h
   src/widgets/mesh_modifiers/fill_holes_modifier_widget.cpp
   # Resources
   resources/resource.qrc

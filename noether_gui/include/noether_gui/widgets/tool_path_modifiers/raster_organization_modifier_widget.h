@@ -8,6 +8,7 @@ namespace noether
 {
 struct RasterOrganizationModifierWidget : public ToolPathModifierWidget
 {
+  Q_OBJECT
 public:
   using ToolPathModifierWidget::ToolPathModifierWidget;
 

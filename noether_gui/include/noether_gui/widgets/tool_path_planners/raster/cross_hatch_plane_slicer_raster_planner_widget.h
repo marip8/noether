@@ -6,6 +6,7 @@ namespace noether
 {
 class CrossHatchPlaneSlicerRasterPlannerWidget : public PlaneSlicerRasterPlannerWidget
 {
+  Q_OBJECT
 public:
   CrossHatchPlaneSlicerRasterPlannerWidget(boost_plugin_loader::PluginLoader&& loader, QWidget* parent = nullptr);
 

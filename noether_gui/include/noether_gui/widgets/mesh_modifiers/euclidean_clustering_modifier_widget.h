@@ -10,6 +10,7 @@ namespace noether
 {
 class EuclideanClusteringMeshModifierWidget : public MeshModifierWidget
 {
+  Q_OBJECT
 public:
   EuclideanClusteringMeshModifierWidget(QWidget* parent = nullptr);
 

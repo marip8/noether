@@ -12,6 +12,7 @@ namespace noether
 {
 class MovingAverageOrientationSmoothingModifierWidget : public ToolPathModifierWidget
 {
+  Q_OBJECT
 public:
   MovingAverageOrientationSmoothingModifierWidget(QWidget* parent = nullptr);
   ToolPathModifier::ConstPtr create() const override;

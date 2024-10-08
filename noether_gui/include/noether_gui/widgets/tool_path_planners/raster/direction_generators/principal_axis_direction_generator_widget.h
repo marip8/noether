@@ -12,6 +12,7 @@ namespace noether
 {
 class PrincipalAxisDirectionGeneratorWidget : public DirectionGeneratorWidget
 {
+  Q_OBJECT
 public:
   PrincipalAxisDirectionGeneratorWidget(QWidget* parent = nullptr);
 

@@ -9,6 +9,7 @@ namespace noether
 {
 class UniformSpacingSplineModifierWidget : public ToolPathModifierWidget
 {
+  Q_OBJECT
 public:
   UniformSpacingSplineModifierWidget(QWidget* parent = nullptr);
 

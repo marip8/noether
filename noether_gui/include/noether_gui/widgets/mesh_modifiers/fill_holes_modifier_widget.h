@@ -9,6 +9,7 @@ namespace noether
 {
 class FillHolesModifierWidget : public MeshModifierWidget
 {
+  Q_OBJECT
 public:
   FillHolesModifierWidget(QWidget* parent = nullptr);
 

@@ -13,6 +13,7 @@ namespace noether
 {
 class FixedDirectionGeneratorWidget : public DirectionGeneratorWidget
 {
+  Q_OBJECT
 public:
   FixedDirectionGeneratorWidget(QWidget* parent = nullptr);
 

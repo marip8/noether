@@ -6,6 +6,7 @@ namespace noether
 {
 class BoundaryEdgePlannerWidget : public EdgePlannerWidget
 {
+  Q_OBJECT
 public:
   using EdgePlannerWidget::configure;
   using EdgePlannerWidget::EdgePlannerWidget;

@@ -13,6 +13,7 @@ namespace noether
 {
 class FixedOriginGeneratorWidget : public OriginGeneratorWidget
 {
+  Q_OBJECT
 public:
   FixedOriginGeneratorWidget(QWidget* parent = nullptr);
 

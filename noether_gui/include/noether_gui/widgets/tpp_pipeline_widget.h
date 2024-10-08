@@ -21,6 +21,7 @@ class PluginLoaderWidget;
  */
 class TPPPipelineWidget : public QWidget
 {
+  Q_OBJECT
 public:
   TPPPipelineWidget(boost_plugin_loader::PluginLoader loader, QWidget* parent = nullptr);
 

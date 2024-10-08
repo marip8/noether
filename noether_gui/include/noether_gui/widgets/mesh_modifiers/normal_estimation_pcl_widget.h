@@ -14,6 +14,7 @@ namespace noether
 {
 class NormalEstimationPCLMeshModifierWidget : public MeshModifierWidget
 {
+  Q_OBJECT
 public:
   NormalEstimationPCLMeshModifierWidget(QWidget* parent = nullptr);
 

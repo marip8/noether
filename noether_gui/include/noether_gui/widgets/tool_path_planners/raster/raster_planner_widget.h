@@ -19,6 +19,7 @@ namespace noether
 {
 class RasterPlannerWidget : public ToolPathPlannerWidget
 {
+  Q_OBJECT
 public:
   RasterPlannerWidget(boost_plugin_loader::PluginLoader&& loader, QWidget* parent = nullptr);
 

@@ -13,6 +13,7 @@ namespace noether
 {
 class LinearApproachToolPathModifierWidget : public ToolPathModifierWidget
 {
+  Q_OBJECT
 public:
   LinearApproachToolPathModifierWidget(QWidget* parent = nullptr);
 
