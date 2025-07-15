@@ -110,6 +110,18 @@ target_clang_tidy(${PROJECT_NAME}
   CHECKS ${DEFAULT_CLANG_TIDY_CHECKS})
 target_code_coverage(${PROJECT_NAME} INTERFACE ALL ENABLE ${NOETHER_ENABLE_TESTING})
 
+# Plugin Library
+add_library(${PROJECT_NAME}_plugins SHARED
+  src/plugins.cpp
+)
+target_link_libraries(${PROJECT_NAME}_plugins PUBLIC ${PROJECT_NAME} yaml-cpp boost_plugin_loader::boost_plugin_loader)
+target_cxx_version(${PROJECT_NAME}_plugins PUBLIC VERSION 14)
+target_clang_tidy(${PROJECT_NAME}_plugins
+  ENABLE ${NOETHER_ENABLE_CLANG_TIDY}
+  WARNINGS_AS_ERRORS ${NOETHER_ENABLE_TESTING}
+  CHECKS ${DEFAULT_CLANG_TIDY_CHECKS})
+target_code_coverage(${PROJECT_NAME}_plugins INTERFACE ALL ENABLE ${NOETHER_ENABLE_TESTING})
+
 # Install headers
 install(DIRECTORY include/ DESTINATION include/)
 
@@ -121,4 +133,4 @@ if(${NOETHER_ENABLE_TESTING})
 endif()
 
 # Package configuration
-configure_package(NAMESPACE noether DEPENDENCIES Eigen3 "PCL REQUIRED COMPONENTS common io surface segmentation" VTK TARGETS ${PROJECT_NAME})
+configure_package(NAMESPACE noether DEPENDENCIES Eigen3 "PCL REQUIRED COMPONENTS common io surface segmentation" VTK TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_plugins)
