@@ -1,8 +1,7 @@
 #include <noether_gui/widgets/tool_path_modifiers/biased_tool_drag_orientation_modifier_widget.h>
 #include <noether_gui/widgets/distance_double_spin_box.h>
-#include <noether_gui/utils.h>
 
-#include <noether_tpp/tool_path_modifiers/biased_tool_drag_orientation_modifier.h>
+#include <noether_tpp/serialization.h>
 #include <QFormLayout>
 #include <QLabel>
 #include <QDoubleSpinBox>
@@ -36,20 +35,15 @@ BiasedToolDragOrientationToolPathModifierWidget::BiasedToolDragOrientationToolPa
   layout->addRow(new QLabel("Tool radius", this), tool_radius_);
 }
 
-ToolPathModifier::ConstPtr BiasedToolDragOrientationToolPathModifierWidget::create() const
-{
-  return std::make_unique<BiasedToolDragOrientationToolPathModifier>(angle_offset_->value() * M_PI / 180.0,
-                                                                     tool_radius_->value());
-}
-
 void BiasedToolDragOrientationToolPathModifierWidget::configure(const YAML::Node& config)
 {
-  angle_offset_->setValue(getEntry<double>(config, ANGLE_OFFSET_KEY));
-  tool_radius_->setValue(getEntry<double>(config, TOOL_RADIUS_KEY));
+  angle_offset_->setValue(YAML::getMember<double>(config, ANGLE_OFFSET_KEY));
+  tool_radius_->setValue(YAML::getMember<double>(config, TOOL_RADIUS_KEY));
 }
 
 void BiasedToolDragOrientationToolPathModifierWidget::save(YAML::Node& config) const
 {
+  config["name"] = "BiasedToolDragOrientation";
   config[ANGLE_OFFSET_KEY] = angle_offset_->value();
   config[TOOL_RADIUS_KEY] = tool_radius_->value();
 }
