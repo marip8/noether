@@ -122,6 +122,9 @@ target_clang_tidy(${PROJECT_NAME}_plugins
   CHECKS ${DEFAULT_CLANG_TIDY_CHECKS})
 target_code_coverage(${PROJECT_NAME}_plugins INTERFACE ALL ENABLE ${NOETHER_ENABLE_TESTING})
 
+# Add the name of the plugin library as a private compile definition for the core library
+target_compile_definitions(${PROJECT_NAME} PUBLIC NOETHER_PLUGIN_LIB="${PROJECT_NAME}_plugins")
+
 # Install headers
 install(DIRECTORY include/ DESTINATION include/)
 
