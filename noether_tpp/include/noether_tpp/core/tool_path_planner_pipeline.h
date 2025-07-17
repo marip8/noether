@@ -21,11 +21,18 @@
 #include <noether_tpp/core/mesh_modifier.h>
 #include <noether_tpp/core/tool_path_modifier.h>
 #include <noether_tpp/core/tool_path_planner.h>
-#include <noether_tpp/macros.h>
 
 #include <pcl/PolygonMesh.h>
 
-FWD_DECLARE_YAML_STRUCTS()
+namespace boost_plugin_loader
+{
+class PluginLoader;
+}
+
+namespace YAML
+{
+class Node;
+}
 
 namespace noether
 {
@@ -41,16 +48,12 @@ public:
                           ToolPathPlanner::ConstPtr planner,
                           ToolPathModifier::ConstPtr tool_path_mod);
 
+  ToolPathPlannerPipeline(std::shared_ptr<const boost_plugin_loader::PluginLoader> loader, const YAML::Node& node);
+
   std::vector<ToolPaths> plan(pcl::PolygonMesh mesh) const;
   MeshModifier::ConstPtr mesh_modifier;
   ToolPathPlanner::ConstPtr planner;
   ToolPathModifier::ConstPtr tool_path_modifier;
-
-protected:
-  ToolPathPlannerPipeline() = default;
-  DECLARE_YAML_FRIEND_CLASSES(ToolPathPlannerPipeline);
 };
 
 }  // namespace noether
-
-FWD_DECLARE_YAML_CONVERT(noether::ToolPathPlannerPipeline)
