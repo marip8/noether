@@ -8,7 +8,7 @@ class QLabel;
 
 namespace noether
 {
-class PrincipalAxisDirectionGeneratorWidget : public DirectionGeneratorWidget
+class PrincipalAxisDirectionGeneratorWidget : public BaseWidget
 {
 public:
   PrincipalAxisDirectionGeneratorWidget(QWidget* parent = nullptr);

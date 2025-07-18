@@ -80,7 +80,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE "$<BUILD_INTERFACE:${CMAKE_CU
 target_link_libraries(${PROJECT_NAME} PUBLIC noether::noether_tpp Qt5::Widgets ${PCL_LIBRARIES} boost_plugin_loader::boost_plugin_loader Eigen3::Eigen yaml-cpp)
 target_compile_definitions(${PROJECT_NAME}
   PUBLIC
-    NOETHER_GUI_PLUGINS="${PROJECT_NAME}_plugins"
+    NOETHER_GUI_PLUGIN_LIB="${PROJECT_NAME}_plugins"
     NOETHER_GUI_TPP_SECTION="g_tpp"
     NOETHER_GUI_DIRECTION_GENERATOR_SECTION="g_dg"
     NOETHER_GUI_ORIGIN_GENERATOR_SECTION="g_og"
