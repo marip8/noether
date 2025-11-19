@@ -161,6 +161,85 @@ Eigen::Vector3f getFaceNormal(const pcl::PolygonMesh& mesh, const pcl::Vertices&
   return edge_01.cross(edge_0n).normalized();
 }
 
+template <typename T>
+PointCloudMapConst<T> mapContiguousFields(const pcl::PCLPointCloud2& cloud, const std::vector<std::string>& field_names)
+{
+  std::vector<std::reference_wrapper<const pcl::PCLPointField>> fields;
+  fields.reserve(field_names.size());
+  for (const std::string& field : field_names)
+    fields.push_back(*findFieldOrThrow(cloud.fields, field));
+
+  // Check that size of the point (in bytes) is evenly divisible by the size of the data type
+  if (cloud.point_step % sizeof(T) != 0)
+    throw std::runtime_error("Point step (" + std::to_string(cloud.point_step) + ") must be divisible by " +
+                             std::to_string(sizeof(T)));
+
+  // Check that fields are contiguous
+  for (auto field = fields.begin(); field != fields.end() - 1; ++field)
+  {
+    auto next_field = field + 1;
+
+    if (next_field->get().offset != field->get().offset + field->get().count * sizeof(T))
+    {
+      std::stringstream ss;
+      ss << "Field '" << next_field->get().name << "' is not contiguous with field '" << field->get().name << "'";
+      throw std::runtime_error(ss.str());
+    }
+  }
+
+  std::size_t n = 0;
+  for (const auto& field : fields)
+    n += field.get().count;
+
+  // Since the fields are contiguous, the inner stride should be zero
+  // The outer stride is the number of values (of size of type T) in the point
+  Eigen::OuterStride<> stride(cloud.point_step / sizeof(T));
+
+  // Interpret the data as a float
+  auto data = reinterpret_cast<const T*>(cloud.data.data());
+
+  // Return the mapping
+  return PointCloudMapConst<T>(data + fields.front().get().offset, n, cloud.width * cloud.height, stride);
+}
+
+template <typename T>
+PointCloudMap<T> mapContiguousFields(pcl::PCLPointCloud2& cloud, const std::vector<std::string>& field_names)
+{
+  const pcl::PCLPointCloud2& cloud_const = cloud;
+  PointCloudMapConst<T> map_const = mapContiguousFields<T>(cloud_const, field_names);
+  return PointCloudMap<T>(const_cast<T*>(map_const.data()), map_const.rows(), map_const.cols(), map_const.stride());
+}
+
+PointCloudMapConst<float> mapPointCloudXyz(const pcl::PCLPointCloud2& cloud)
+{
+  return mapContiguousFields<float>(cloud, { "x", "y", "z" });
+}
+
+PointCloudMap<float> mapPointCloudXyz(pcl::PCLPointCloud2& cloud)
+{
+  return mapContiguousFields<float>(cloud, { "x", "y", "z" });
+}
+
+PointCloudMapConst<float> mapPointCloudNormals(const pcl::PCLPointCloud2& cloud)
+{
+  return mapContiguousFields<float>(cloud, { "normal_x", "normal_y", "normal_z" });
+}
+
+PointCloudMap<float> mapPointCloudNormals(pcl::PCLPointCloud2& cloud)
+{
+  return mapContiguousFields<float>(cloud, { "normal_x", "normal_y", "normal_z" });
+}
+
+PointCloudMapConst<uint8_t> mapPointCloudRgba(const pcl::PCLPointCloud2& cloud)
+{
+  return mapContiguousFields<uint8_t>(cloud, { "rgba" });
+}
+
+PointCloudMap<uint8_t> mapPointCloudRgba(pcl::PCLPointCloud2& cloud)
+{
+  return mapContiguousFields<uint8_t>(cloud, { "rgba" });
+}
+
 TriangleMesh createTriangleMesh(const pcl::PolygonMesh& input)
 {
   TriangleMesh mesh;

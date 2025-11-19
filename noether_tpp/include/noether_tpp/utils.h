@@ -36,6 +36,30 @@ Eigen::Map<Eigen::Vector<uint8_t, 4>> getRgba(pcl::PCLPointCloud2& cloud, const 
 
 Eigen::Vector3f getFaceNormal(const pcl::PolygonMesh& mesh, const pcl::Vertices& polygon);
 
+template <typename T>
+using PointCloudMap =
+    Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>, Eigen::AlignmentType::Unaligned, Eigen::OuterStride<>>;
+
+template <typename T>
+using PointCloudMapConst = Eigen::
+    Map<const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>, Eigen::AlignmentType::Unaligned, Eigen::OuterStride<>>;
+
+template <typename T>
+PointCloudMapConst<T> mapContiguousFields(const pcl::PCLPointCloud2& cloud,
+                                          const std::vector<std::string>& field_names);
+
+template <typename T>
+PointCloudMap<T> mapContiguousFields(pcl::PCLPointCloud2& cloud, const std::vector<std::string>& field_names);
+
+PointCloudMapConst<float> mapPointCloudXyz(const pcl::PCLPointCloud2& cloud);
+PointCloudMap<float> mapPointCloudXyz(pcl::PCLPointCloud2& cloud);
+
+PointCloudMapConst<float> mapPointCloudNormals(const pcl::PCLPointCloud2& cloud);
+PointCloudMap<float> mapPointCloudNormals(pcl::PCLPointCloud2& cloud);
+
+PointCloudMapConst<uint8_t> mapPointCloudRgba(const pcl::PCLPointCloud2& cloud);
+PointCloudMap<uint8_t> mapPointCloudRgba(pcl::PCLPointCloud2& cloud);
+
 using MeshTraits = pcl::geometry::DefaultMeshTraits<std::uint32_t>;
 using TriangleMesh = pcl::geometry::TriangleMesh<MeshTraits>;
 
