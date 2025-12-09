@@ -12,11 +12,15 @@ namespace noether
  * are sorted within each tool path in ascending order by the x-axis value of their first waypoint. Tool paths are
  * sorted in ascending order by the y-axis value of the first waypoint in the first tool path segment.
  */
-struct RasterOrganizationModifier : ToolPathModifier
+class RasterOrganizationModifier : public ToolPathModifier
 {
-  using ToolPathModifier::ToolPathModifier;
+public:
+  RasterOrganizationModifier(const Eigen::Vector3d& ref_dir = Eigen::Vector3d::Constant(std::numeric_limits<double>::quiet_NaN()));
 
   ToolPaths modify(ToolPaths) const override;
+
+protected:
+  Eigen::Vector3d ref_dir_;
 };
 
 }  // namespace noether

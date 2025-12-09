@@ -2,13 +2,21 @@
 #include <noether_tpp/utils.h>
 #include <noether_tpp/serialization.h>
 
-#include <numeric>
-
 namespace noether
 {
+RasterOrganizationModifier::RasterOrganizationModifier(const Eigen::Vector3d& ref_dir) : ref_dir_(ref_dir) {}
+
 ToolPaths RasterOrganizationModifier::modify(ToolPaths tool_paths) const
 {
-  const Eigen::Vector3d reference_segment_dir = estimateToolPathDirection(tool_paths.at(0));
+  Eigen::Vector3d ref_dir;
+  if (ref_dir_.hasNaN())
+  {
+    ref_dir = estimateToolPathDirection(tool_paths[0]);
+  }
+  else
+  {
+    ref_dir = ref_dir_;
+  }
 
   for (ToolPath& tool_path : tool_paths)
   {
@@ -17,10 +25,10 @@ ToolPaths RasterOrganizationModifier::modify(ToolPaths tool_paths) const
     {
       std::sort(segment.begin(),
                 segment.end(),
-                [&segment, &reference_segment_dir](const ToolPathWaypoint& a, const ToolPathWaypoint& b) {
+                [&segment, &ref_dir](const ToolPathWaypoint& a, const ToolPathWaypoint& b) {
                   Eigen::Vector3d diff_from_start_b = b.translation() - segment.at(0).translation();
                   Eigen::Vector3d diff_from_start_a = a.translation() - segment.at(0).translation();
-                  return diff_from_start_a.dot(reference_segment_dir) < diff_from_start_b.dot(reference_segment_dir);
+                  return diff_from_start_a.dot(ref_dir) < diff_from_start_b.dot(ref_dir);
                 });
     }
 
@@ -28,15 +36,15 @@ ToolPaths RasterOrganizationModifier::modify(ToolPaths tool_paths) const
     // direction
     std::sort(tool_path.begin(),
               tool_path.end(),
-              [&tool_path, &reference_segment_dir](const ToolPathSegment& a, const ToolPathSegment& b) {
+              [&tool_path, &ref_dir](const ToolPathSegment& a, const ToolPathSegment& b) {
                 Eigen::Vector3d diff_from_start_b = b.at(0).translation() - tool_path.at(0).at(0).translation();
                 Eigen::Vector3d diff_from_start_a = a.at(0).translation() - tool_path.at(0).at(0).translation();
-                return diff_from_start_a.dot(reference_segment_dir) < diff_from_start_b.dot(reference_segment_dir);
+                return diff_from_start_a.dot(ref_dir) < diff_from_start_b.dot(ref_dir);
               });
   }
 
   // Sort the tool paths by their distance along a vector that is perpendicular to the reference direction of travel
-  const Eigen::Vector3d reference_tool_paths_dir = estimateRasterDirection(tool_paths, reference_segment_dir);
+  const Eigen::Vector3d reference_tool_paths_dir = estimateRasterDirection(tool_paths, ref_dir);
   const Eigen::Isometry3d first_wp = tool_paths.at(0).at(0).at(0);
   std::sort(tool_paths.begin(),
             tool_paths.end(),

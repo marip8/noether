@@ -22,7 +22,7 @@ ToolPaths RasterPlanner::plan(const pcl::PolygonMesh& mesh) const
 
   // Apply the modifications necessary to produce the "default" behavior
   // First, organize the position of the waypoints into a raster pattern
-  RasterOrganizationModifier raster;
+  RasterOrganizationModifier raster(dir_gen_->generate(mesh));
   tool_paths = raster.modify(tool_paths);
 
   // Next, update the orientation of the waypoints such that their x-axes align with the direction of travel between
