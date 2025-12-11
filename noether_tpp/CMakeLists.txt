@@ -60,6 +60,7 @@ add_library(
   # Mesh Modifiers
   src/mesh_modifiers/subset_extraction/subset_extractor.cpp
   src/mesh_modifiers/subset_extraction/extruded_polygon_subset_extractor.cpp
+  src/mesh_modifiers/subset_extraction/vtk_cutter_extractor.cpp
   src/mesh_modifiers/compound_modifier.cpp
   src/mesh_modifiers/clean_data_modifier.cpp
   src/mesh_modifiers/euclidean_clustering_modifier.cpp
