@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>417</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -214,6 +214,25 @@
          <widget class="QLabel" name="label_3">
           <property name="text">
            <string>Origin size</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Mesh Meta-information</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLineEdit" name="line_edit_mesh_frame_id">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>Frame ID</string>
           </property>
          </widget>
         </item>

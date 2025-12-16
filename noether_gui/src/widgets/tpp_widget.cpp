@@ -426,6 +426,10 @@ void TPPWidget::plan()
     if (pcl::io::loadPolygonFile(mesh_file_, full_mesh) < 1)
       throw std::runtime_error("Failed to load mesh from file");
 
+    // Populate the mesh meta-information
+    full_mesh.header.frame_id = ui_->line_edit_mesh_frame_id->text().toStdString();
+    full_mesh.cloud.header.frame_id = ui_->line_edit_mesh_frame_id->text().toStdString();
+
     const ToolPathPlannerPipeline pipeline = pipeline_widget_->createPipeline();
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
