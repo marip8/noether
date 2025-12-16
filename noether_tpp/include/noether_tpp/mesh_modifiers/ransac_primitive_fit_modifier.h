@@ -41,7 +41,8 @@ public:
   RansacPrimitiveFitMeshModifier(float distance_threshold,
                                  unsigned min_vertices = 1,
                                  int max_primitives = -1,
-                                 unsigned max_iterations = 100);
+                                 unsigned max_iterations = 100,
+                                 bool refine_model = true);
 
   virtual ~RansacPrimitiveFitMeshModifier() = default;
 
@@ -70,6 +71,7 @@ protected:
   unsigned min_vertices_;
   int max_primitives_;
   unsigned max_iterations_;
+  bool refine_model_;
 };
 
 }  // namespace noether
