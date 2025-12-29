@@ -70,6 +70,9 @@ ToolPaths RadiusOfCurvatureExtrapolationToolPathModifier::modify(ToolPaths tool_
   {
     for (ToolPathSegment& segment : tool_path)
     {
+      if (segment.size() < 4)
+        throw std::runtime_error("Spline cannot be fit to tool path segment with less than 4 waypoints");
+
       // Extract the spline points
       Eigen::Matrix3Xd points(3, segment.size());
       for (std::size_t i = 0; i < segment.size(); ++i)
